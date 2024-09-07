@@ -1,11 +1,11 @@
 import { Alert } from 'react-native';
 
-export const handleError = (error: any, customMessage?: string) => {
+export const handleError = (error: Error, customMessage?: string) => {
     console.error(error);
 
     let errorMessage = customMessage || 'An unexpected error occurred';
-    if (error instanceof Error) {
-        errorMessage = error.message;
+    if (error.message) {
+        errorMessage += `: ${error.message}`;
     }
 
     Alert.alert('Error', errorMessage);

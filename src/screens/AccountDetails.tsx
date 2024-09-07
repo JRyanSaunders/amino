@@ -1,14 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { signOut, updateProfile } from 'firebase/auth';
-import {doc, getDoc, updateDoc} from 'firebase/firestore';
+import {View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { colors, fontSizes, spacing } from '../constants/theme';
-import { useUser } from '../context/UserContext';
-import { auth, db } from '../services/firebase';
+import {useUser} from "../context/UserContext";
+import {useNavigation} from "@react-navigation/native";
+import {auth, db} from "../services/firebase";
+import {doc, getDoc, updateDoc} from "firebase/firestore";
+import {updateProfile} from "firebase/auth";
 import {Ionicons} from "@expo/vector-icons";
 
-export const SettingsScreen: React.FC = () => {
+type AuthStackParamList = {
+    Account: undefined;
+    PersonalInfo: { email: string; password: string };
+};
+
+type AccountScreenNavigationProp = StackNavigationProp<AuthStackParamList, 'Account'>;
+
+type Props = {
+    navigation: AccountScreenNavigationProp;
+};
+
+export const AccountDetails: React.FC<Props> = () => {
     const { user, userProfile, updateUserProfile } = useUser();
     const navigation = useNavigation();
 
@@ -64,33 +76,47 @@ export const SettingsScreen: React.FC = () => {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            await signOut(auth);
-            navigation.navigate('Login');
-        } catch (error) {
-            console.error('Error signing out:', error);
-            Alert.alert('Error', 'Failed to sign out');
-        }
-    };
-
-    const navigateToAccountDetails = () => {
-        navigation.navigate('AccountDetails')
-    }
-
     return (
         <View style={styles.container}>
-            <View>
-            <Text style={styles.title}>Settings</Text>
+            <Text style={styles.title}>Account Details</Text>
 
-            <TouchableOpacity style={styles.setting} onPress={navigateToAccountDetails}>
-                <Text>Account Details</Text>
-                <Ionicons name={'chevron-forward-outline'} size={20} color={'red'} />
-            </TouchableOpacity>
-            </View>
+            <TextInput
+                style={styles.input}
+                placeholder="Name"
+                value={name}
+                onChangeText={setName}
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Age"
+                value={age}
+                onChangeText={setAge}
+                keyboardType="numeric"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Height (cm)"
+                value={height}
+                onChangeText={setHeight}
+                keyboardType="numeric"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Weight (kg)"
+                value={weight}
+                onChangeText={setWeight}
+                keyboardType="numeric"
+            />
+            <TextInput
+                style={styles.input}
+                placeholder="Activity Level (1-5)"
+                value={activityLevel}
+                onChangeText={setActivityLevel}
+                keyboardType="numeric"
+            />
 
-            <TouchableOpacity style={[styles.button, styles.logoutButton]} onPress={handleLogout}>
-                <Text style={styles.buttonText}>Logout</Text>
+            <TouchableOpacity style={styles.button} onPress={handleUpdateProfile}>
+                <Text style={styles.buttonText}>Update Profile</Text>
             </TouchableOpacity>
         </View>
     );
@@ -101,7 +127,6 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: spacing.medium,
         backgroundColor: colors.background,
-        justifyContent: "space-between"
     },
     title: {
         fontSize: fontSizes.xlarge,

@@ -12,17 +12,15 @@ import {
     Platform,
     Alert,
 } from 'react-native';
-import { doc, setDoc, increment } from 'firebase/firestore';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { useUser } from '../context/UserContext';
-import { db } from '../services/firebase';
 import { colors, fontSizes, spacing, borderRadius } from '../constants/theme';
 
 interface FoodLoggingModalProps {
     visible: boolean;
     onClose: () => void;
-    onFoodLogged: () => void;
+    onFoodLogged: (foodItem: FoodItem, quantity: number) => void;
 }
 
 interface FoodItem {
@@ -32,7 +30,7 @@ interface FoodItem {
     food_type: string;
     calories: number;
     protein: number;
-    carbohydrate: number;
+    carbs: number;
     fat: number;
 }
 
@@ -69,7 +67,7 @@ const generateOauthParameters = (method: string, url: string, params: Record<str
     };
 };
 
-const parseNutritionInfo = (description: string): { calories: number; protein: number; carbohydrate: number; fat: number } => {
+const parseNutritionInfo = (description: string): { calories: number; protein: number; carbs: number; fat: number } => {
     const nutritionRegex = /Calories: (\d+)kcal \| Fat: ([\d.]+)g \| Carbs: ([\d.]+)g \| Protein: ([\d.]+)g/;
     const match = description.match(nutritionRegex);
 
@@ -77,12 +75,12 @@ const parseNutritionInfo = (description: string): { calories: number; protein: n
         return {
             calories: parseInt(match[1], 10),
             fat: parseFloat(match[2]),
-            carbohydrate: parseFloat(match[3]),
+            carbs: parseFloat(match[3]),
             protein: parseFloat(match[4]),
         };
     }
 
-    return { calories: 0, protein: 0, carbohydrate: 0, fat: 0 };
+    return { calories: 0, protein: 0, carbs: 0, fat: 0 };
 };
 
 export const FoodLoggingModal: React.FC<FoodLoggingModalProps> = ({ visible, onClose, onFoodLogged }) => {
@@ -143,28 +141,37 @@ export const FoodLoggingModal: React.FC<FoodLoggingModalProps> = ({ visible, onC
         }
     };
 
+    // const handleLogFood = async () => {
+    //     if (!selectedFood || !user) return;
+    //
+    //     try {
+    //         const today = new Date().toISOString().split('T')[0];
+    //         const dailyLogRef = doc(db, 'dailyLogs', `${user.uid}_${today}`);
+    //         const quantityNum = parseFloat(quantity) || 0;
+    //
+    //         await setDoc(dailyLogRef, {
+    //             caloriesConsumed: increment(selectedFood.calories * quantityNum),
+    //             carbs: increment(selectedFood.carbohydrate * quantityNum),
+    //             protein: increment(selectedFood.protein * quantityNum),
+    //             fat: increment(selectedFood.fat * quantityNum),
+    //         }, { merge: true });
+    //
+    //         onFoodLogged();
+    //         onClose();
+    //     } catch (error) {
+    //         console.error('Error logging food:', error);
+    //         Alert.alert('Error', 'Failed to log food. Please try again.');
+    //     }
+    // };
+
     const handleLogFood = async () => {
-        if (!selectedFood || !user) return;
+        if (!selectedFood) return;
 
-        try {
-            const today = new Date().toISOString().split('T')[0];
-            const dailyLogRef = doc(db, 'dailyLogs', `${user.uid}_${today}`);
-            const quantityNum = parseFloat(quantity) || 0;
-
-            await setDoc(dailyLogRef, {
-                caloriesConsumed: increment(selectedFood.calories * quantityNum),
-                carbs: increment(selectedFood.carbohydrate * quantityNum),
-                protein: increment(selectedFood.protein * quantityNum),
-                fat: increment(selectedFood.fat * quantityNum),
-            }, { merge: true });
-
-            onFoodLogged();
-            onClose();
-        } catch (error) {
-            console.error('Error logging food:', error);
-            Alert.alert('Error', 'Failed to log food. Please try again.');
-        }
+        const quantityNum = parseFloat(quantity) || 0;
+        onFoodLogged(selectedFood, quantityNum);
+        onClose();
     };
+
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>

@@ -1,25 +1,27 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {colors} from "../constants/theme";
 
 interface MacroCircleProps {
     title: string;
     current: number;
     goal: number;
     color: string;
+    bgColor: string;
 }
 
-export const MacroCircle: React.FC<MacroCircleProps> = ({ title, current, goal, color }) => {
+export const MacroCircle: React.FC<MacroCircleProps> = ({ title, current, goal, color, bgColor }) => {
     const progress = (current / goal) * 100;
 
     return (
         <View style={styles.container}>
             <AnimatedCircularProgress
-                size={100}
+                size={105}
                 width={10}
                 fill={progress}
                 tintColor={color}
-                backgroundColor="#e0e0e0"
+                backgroundColor={bgColor}
             >
                 {() => (
                     <View style={styles.content}>
@@ -42,8 +44,10 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 16,
         fontWeight: 'bold',
+        letterSpacing: 1,
     },
     value: {
-        fontSize: 14,
+        color: colors.text,
+        fontSize: 12,
     },
 });

@@ -19,7 +19,7 @@ export const LoginScreen: React.FC = () => {
     };
 
     const handleCreateAccount = () => {
-        navigation.navigate('Onboarding');
+        navigation.navigate('Account');
     };
 
     return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import {colors} from "../constants/theme";
 
 interface CalorieProgressProps {
     consumed: number;
@@ -27,20 +28,18 @@ export const CalorieProgress: React.FC<CalorieProgressProps> = ({ consumed, burn
                 {() => (
                     <View style={styles.content}>
                         <Text style={styles.remainingValue}>{remaining}</Text>
-                        <Text style={styles.remainingLabel}>Remaining</Text>
+                        <Text style={styles.remainingLabel}>cal Remaining</Text>
                     </View>
                 )}
             </AnimatedCircularProgress>
-            <View style={styles.details}>
-                <Text style={styles.detailText}>{consumed} Eaten</Text>
-                <Text style={styles.detailText}>{burned} Burned</Text>
-            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
+        marginTop: 65,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     content: {
@@ -49,17 +48,17 @@ const styles = StyleSheet.create({
     remainingValue: {
         fontSize: 36,
         fontWeight: 'bold',
-        color: '#4CAF50',
+        color: colors.white,
     },
     remainingLabel: {
         fontSize: 16,
-        color: '#4CAF50',
+        color: colors.white,
     },
     details: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginTop: 10,
+        // marginTop: 10,
     },
     detailText: {
         fontSize: 16,

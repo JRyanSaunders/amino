@@ -11,6 +11,23 @@ export const colors = {
     highlight: '#b85ae5',
     white: '#FFFFFF',
     black: '#000000',
+    warningAccent: '#ffdcc2',
+    test: '#d8d8d8',
+    highlightAccent: '#e5e3ef',
+
+    // '#159173',
+    // '#bfe4d8',
+    // '#a2d32b',
+    // '#eefaef',
+    // '#575e5b',
+    // '#f8cacf',
+    // '#f94a54',
+    // '#ffdcc2',
+    // '#fb8b3e',
+    // '#d8d8d8',
+    // '#277751',
+    // '#b85ae5',
+    // '#e5e3ef'
 };
 
 export const fontSizes = {

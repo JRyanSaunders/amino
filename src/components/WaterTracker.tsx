@@ -14,19 +14,21 @@ export const WaterTracker: React.FC<WaterTrackerProps> = ({ current, goal, onInc
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Water Intake</Text>
+            <View style={styles.containerTop}>
+                <Text style={styles.title}>Water Intake</Text>
+                <View style={styles.buttons}>
+                    <TouchableOpacity style={styles.button} onPress={onDecrease}>
+                        <Text style={styles.buttonText}>-</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={onIncrease}>
+                        <Text style={styles.buttonText}>+</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
             <View style={styles.progressContainer}>
                 <View style={[styles.progressBar, { width: `${progress}%` }]} />
             </View>
             <Text style={styles.progressText}>{current.toFixed(1)}L / {goal.toFixed(1)}L</Text>
-            <View style={styles.buttons}>
-                <TouchableOpacity style={styles.button} onPress={onDecrease}>
-                    <Text style={styles.buttonText}>-</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={onIncrease}>
-                    <Text style={styles.buttonText}>+</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
         marginBottom: spacing.small,
     },
     progressContainer: {
-        height: 10, // Thinner progress bar
+        height: 10,
         backgroundColor: colors.secondary,
         borderRadius: borderRadius.small,
         overflow: 'hidden',
@@ -61,11 +63,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         marginTop: spacing.medium,
+        marginBottom: spacing.small,
     },
     button: {
         backgroundColor: colors.primary,
-        width: 40,
-        height: 40,
+        width: 32,
+        height: 32,
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
@@ -76,4 +79,9 @@ const styles = StyleSheet.create({
         fontSize: fontSizes.large,
         fontWeight: 'bold',
     },
+    containerTop: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    }
 });
